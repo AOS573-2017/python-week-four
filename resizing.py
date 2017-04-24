@@ -7,27 +7,13 @@ import numpy.ma as ma
 from netCDF4 import Dataset
 import sys
 import json
-#Our example file is in python-week-four
-filename = 'temp.nc'
-#Open the dataset
-#It is CERES EBAF clear sky fluxes btws
-fluxes_data = Dataset(filename, mode = 'r')
-#This is the data before any regridding
-before = fluxes_data['solar_mon'][:][6]
 
 with open('example.txt', 'r') as f:
 	temp = json.load(f)
-	print np.array(temp['data']).shape
-sys.exit()
-'''
 
-temp_data = {'data': [[float(l) for l in b] for b in before], 'lat': [float(l) for l in fluxes_data['lat'][:]], 'lon': [float(l) for l in fluxes_data['lon'][:]]}
-with open('example.txt', 'w') as f:
-	json.dump(temp_data, f)
-sys.exit()'''
 #Create a function
 #This takes in the lon, lat, and data as it is and creates a function that can interpolate this data to any new grid size now
-function = interpolate.interp2d(fluxes_data['lon'][:], fluxes_data['lat'][:], before, kind = 'linear')
+function = interpolate.interp2d(temp['lon'], temp['lat'], temp['data'], kind = 'linear')
 #Create a set of new lats and lons to increase our resolution
 new_lon = np.linspace(-179.5, 179.5, 720)
 new_lat = np.linspace(-79.5, 79.5, 360)
